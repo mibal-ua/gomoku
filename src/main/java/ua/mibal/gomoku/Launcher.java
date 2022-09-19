@@ -24,6 +24,8 @@ package ua.mibal.gomoku;
 public class Launcher {
 
     public static void main(String[] args) {
-        // Add code here
+        final GameFactory gameFactory = new GameFactory(args);
+        final Game game = gameFactory.create();
+        game.start();
     }
 }
