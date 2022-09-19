@@ -1,4 +1,4 @@
-package ua.mibal.gomoku;
+package ua.mibal.gomoku.component;
 
 import ua.mibal.gomoku.model.config.Level;
 import ua.mibal.gomoku.model.config.PlayerType;
@@ -24,6 +24,7 @@ public class ArgumentParser {
         Level level = null;
         PlayerType player1Type = null;
         PlayerType player2Type = null;
+        int gameTableSize = 0;
         for (final String arg : args) {
             if (arg.equalsIgnoreCase(USER.name()) || arg.equalsIgnoreCase(COMPUTER.name())) {
                 if (player1Type == null) {
@@ -45,6 +46,23 @@ public class ArgumentParser {
                             arg, level
                     );
                 }
+            } else if (isNumber(arg)) {
+                int size = Integer.parseInt(arg);
+                if (7 <= size && size <= 15) {
+                    if (gameTableSize == 0) {
+                        gameTableSize = size;
+                    } else {
+                        System.err.printf(
+                                "Invalid command line argument: '%s', because game table size already set: size='%s'.%n",
+                                arg, gameTableSize
+                        );
+                    }
+                } else {
+                    System.err.printf(
+                            "Invalid command line argument: '%s', because game table size should be between 7 and 15.%n",
+                            arg
+                    );
+                }
             } else {
                 System.err.printf("Unsupported command line argument: '%s'.%n", arg);
             }
@@ -52,15 +70,26 @@ public class ArgumentParser {
         if (level == null) {
             level = LEVEL2;
         }
+        if (gameTableSize == 0) {
+            gameTableSize = 15;
+        }
         if (player1Type == null) {
-            return new CommandLineArguments(level, USER, COMPUTER);
+            return new CommandLineArguments(level, USER, COMPUTER, gameTableSize);
         } else if (player2Type == null) {
-            return new CommandLineArguments(level, USER, player1Type);
+            return new CommandLineArguments(level, USER, player1Type, gameTableSize);
         } else {
-            return new CommandLineArguments(level, player1Type, player2Type);
+            return new CommandLineArguments(level, player1Type, player2Type, gameTableSize);
         }
     }
 
+    private boolean isNumber(final String arg) {
+        try {
+            Integer.parseInt(arg);
+        } catch (NumberFormatException e){
+            return false;
+        }
+        return true;
+    }
 
     /**
      * @author Michael Balakhon
@@ -68,18 +97,22 @@ public class ArgumentParser {
      */
     public static class CommandLineArguments {
 
-        final Level level;
+        private final Level level;
 
-        final PlayerType player1Type;
+        private final PlayerType player1Type;
 
-        final PlayerType player2Type;
+        private final PlayerType player2Type;
+
+        private final int gameTableSize;
 
         public CommandLineArguments(final Level level,
                                     final PlayerType player1Type,
-                                    final PlayerType player2Type) {
+                                    final PlayerType player2Type,
+                                    final int gameTableSize) {
             this.level = level;
             this.player1Type = player1Type;
             this.player2Type = player2Type;
+            this.gameTableSize = gameTableSize;
         }
 
         public Level getLevel() {
@@ -92,6 +125,10 @@ public class ArgumentParser {
 
         public PlayerType getPlayer2Type() {
             return player2Type;
+        }
+
+        public int getGameTableSize() {
+            return gameTableSize;
         }
     }
 }
