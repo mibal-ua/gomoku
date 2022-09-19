@@ -19,7 +19,7 @@ package ua.mibal.gomoku;
 
 /**
  * @author Michael Balakhon
- * @link mibal_ua.t.me
+ * @link t.me/mibal_ua
  */
 public class Launcher {
 
