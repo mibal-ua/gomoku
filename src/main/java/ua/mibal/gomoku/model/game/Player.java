@@ -20,4 +20,8 @@ public class Player {
     public void makeMove(final GameTable gameTable){
         move.make(gameTable, sign);
     }
+
+    public Sign getSign() {
+        return sign;
+    }
 }
