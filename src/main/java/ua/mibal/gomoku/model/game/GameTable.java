@@ -10,6 +10,12 @@ import static ua.mibal.gomoku.model.game.Sign.EMPTY;
  */
 public class GameTable {
 
+    final int length;
+
+    public GameTable(final int length) {
+        this.length = length;
+    }
+
     private final Sign[][] table = {
             {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
             {EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY},
@@ -40,12 +46,16 @@ public class GameTable {
         return table[cell.getRow()][cell.getCol()];
     }
 
+    public int getLength() {
+        return length;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("GameTable{");
-        for (int i = 0; i < table.length; i++) {
+        for (int i = 0; i < length; i++) {
             sb.append(Arrays.toString(table[i]));
-            if (i < table.length - 1) {
+            if (i < length - 1) {
                 sb.append(';');
             }
         }
