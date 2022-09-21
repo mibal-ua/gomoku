@@ -17,6 +17,8 @@
 
 package ua.mibal.gomoku;
 
+import ua.mibal.gomoku.component.Game;
+
 /**
  * @author Michael Balakhon
  * @link t.me/mibal_ua
