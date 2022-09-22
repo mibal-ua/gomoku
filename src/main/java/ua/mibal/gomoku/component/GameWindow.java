@@ -97,12 +97,12 @@ public final class GameWindow extends JFrame {
 
 
     public void printInfoMessage(final String message) {
-        JOptionPane.showMessageDialog(this, message + "\nThe game restarted.", "Info", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
 
     public void printErrorMessage(final String message) {
-        JOptionPane.showMessageDialog(this, message + "\nThe game restarted.", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
 
