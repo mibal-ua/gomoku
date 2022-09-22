@@ -1,7 +1,5 @@
 package ua.mibal.gomoku.model.game;
 
-import java.util.Arrays;
-
 import static ua.mibal.gomoku.model.game.Sign.EMPTY;
 
 /**
@@ -52,11 +50,18 @@ public class GameTable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("GameTable{");
+        final StringBuilder sb = new StringBuilder("GameTable{\n");
         for (int i = 0; i < length; i++) {
-            sb.append(Arrays.toString(table[i]));
+            sb.append("[");
+            for (int j = 0; j < length; j++) {
+                sb.append(table[i][j]);
+                if (j < length - 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("]");
             if (i < length - 1) {
-                sb.append(';');
+                sb.append(";\n");
             }
         }
         sb.append('}');
