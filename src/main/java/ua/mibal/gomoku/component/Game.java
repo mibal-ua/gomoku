@@ -57,12 +57,12 @@ public class Game {
                     player.makeMove(gameTable);
                     gameWindow.printGameTable(gameTable);
                     if (winnerVerifier.isWinner(gameTable, player)) {
-                        gameWindow.printInfoMessage(player + " WIN!");
+                        gameWindow.printInfoMessage(player + " WIN!\nThe game restart.");
                         restart = true;
                         break;
                     }
                     if (drawVerifier.allCellsFilled(gameTable)) {
-                        gameWindow.printInfoMessage("DRAW!");
+                        gameWindow.printInfoMessage("DRAW!\nThe game restart.");
                         restart = true;
                         break;
                     }
