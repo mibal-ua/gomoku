@@ -17,11 +17,16 @@ public class Player {
         this.move = move;
     }
 
-    public void makeMove(final GameTable gameTable){
+    public void makeMove(final GameTable gameTable) {
         move.make(gameTable, sign);
     }
 
     public Sign getSign() {
         return sign;
+    }
+
+    @Override
+    public String toString() {
+        return "'" + sign + "'";
     }
 }
