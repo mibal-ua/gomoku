@@ -1,10 +1,7 @@
 package ua.mibal.gomoku.model.config;
 
 import ua.mibal.gomoku.component.ComputerMoveStrategy;
-import ua.mibal.gomoku.component.strategy.PreventUserWinComputerMoveStrategy;
-import ua.mibal.gomoku.component.strategy.RandomComputerMoveStrategy;
-import ua.mibal.gomoku.component.strategy.WinNowComputerMoveStrategy;
-import ua.mibal.gomoku.component.strategy.WinOnTheNextStepComputerMoveStrategy;
+import ua.mibal.gomoku.component.strategy.*;
 
 /**
  * @author Michael Balakhon
@@ -17,8 +14,11 @@ public enum Level {
 
     LEVEL2(new ComputerMoveStrategy[]{
             new WinNowComputerMoveStrategy(),
-            new PreventUserWinComputerMoveStrategy(),
+            new PreventNowUserWinComputerMoveStrategy(),
             new WinOnTheNextStepComputerMoveStrategy(),
+            new PreventBeforeUserWinComputerMoveStrategy(),
+            new ThirdStepBothToSecondStepComputerMoveStrategy(),
+            new SecondStepBothToFirstStepComputerMoveStrategy(),
             new RandomComputerMoveStrategy()});
 
     private final ComputerMoveStrategy[] strategies;
