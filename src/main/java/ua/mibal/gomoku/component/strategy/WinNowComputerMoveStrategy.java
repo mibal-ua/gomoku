@@ -27,7 +27,7 @@ public class WinNowComputerMoveStrategy extends AbstractComputerMoveStrategy {
 
 
     public WinNowComputerMoveStrategy() {
-        super(1);
+        super(4);
     }
 
     @Override

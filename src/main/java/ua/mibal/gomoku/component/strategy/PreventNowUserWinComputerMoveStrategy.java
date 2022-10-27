@@ -23,10 +23,10 @@ import ua.mibal.gomoku.model.game.Sign;
  * @author Michael Balakhon
  * @link t.me/mibal_ua
  */
-public class PreventUserWinComputerMoveStrategy extends AbstractComputerMoveStrategy {
+public class PreventNowUserWinComputerMoveStrategy extends AbstractComputerMoveStrategy {
 
-    public PreventUserWinComputerMoveStrategy() {
-        super(1);
+    public PreventNowUserWinComputerMoveStrategy() {
+        super(4);
     }
 
     @Override

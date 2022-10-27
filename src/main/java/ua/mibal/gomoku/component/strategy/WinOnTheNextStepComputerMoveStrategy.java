@@ -27,7 +27,7 @@ import ua.mibal.gomoku.model.game.Sign;
 public class WinOnTheNextStepComputerMoveStrategy extends AbstractComputerMoveStrategy implements ComputerMoveStrategy {
 
     public WinOnTheNextStepComputerMoveStrategy() {
-        super(2);
+        super(3);
     }
 
     @Override

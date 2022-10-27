@@ -24,7 +24,7 @@ import ua.mibal.gomoku.model.game.Sign;
 
 import java.util.Random;
 
-import static ua.mibal.gomoku.component.strategy.AbstractComputerMoveStrategy.COLS_AND_ROWS;
+import static ua.mibal.gomoku.component.strategy.AbstractComputerMoveStrategy.lengthOfTable;
 
 /**
  * @author Michael Balakhon
@@ -34,10 +34,10 @@ public class RandomComputerMoveStrategy implements ComputerMoveStrategy {
 
     @Override
     public boolean tryToMakeMove(final GameTable gameTable, final Sign sign) {
-        final Cell[] emptyCells = new Cell[(int) Math.pow(COLS_AND_ROWS, 2)];
+        final Cell[] emptyCells = new Cell[lengthOfTable * lengthOfTable];
         int count = 0;
-        for (int i = 0; i < COLS_AND_ROWS; i++) {
-            for (int j = 0; j < COLS_AND_ROWS; j++) {
+        for (int i = 0; i < lengthOfTable; i++) {
+            for (int j = 0; j < lengthOfTable; j++) {
                 Cell cell = new Cell(i, j);
                 if (gameTable.isEmpty(cell)) {
                     emptyCells[count++] = cell;
