@@ -29,22 +29,20 @@ import java.util.Random;
  * @link t.me/mibal_ua
  */
 public abstract class AbstractComputerMoveStrategy implements ComputerMoveStrategy {
+    
+    protected static int lengthOfTable;
 
-    protected static int COLS_AND_ROWS;
+    private final int expectedSignCells;
 
-    private final int expectedCountEmptyCells;
-
-    public AbstractComputerMoveStrategy(final int countEmptyCells) {
-        this.expectedCountEmptyCells = countEmptyCells;
+    public AbstractComputerMoveStrategy(final int countExpectedSignCells) {
+        this.expectedSignCells = countExpectedSignCells;
     }
 
     @Override
     public final boolean tryToMakeMove(final GameTable gameTable, final Sign moveSign) {
-        COLS_AND_ROWS = gameTable.getLength();
-
+        lengthOfTable = gameTable.getLength();
         final Sign findSign = getFindSign(moveSign);
         BestCells bestCells = new BestCells();
-
         findBestCellForMoveByRows(gameTable, findSign, bestCells);
         findBestCellForMoveByCols(gameTable, findSign, bestCells);
         findBestCellForMoveByMainDiagonal(gameTable, findSign, bestCells);
@@ -60,68 +58,149 @@ public abstract class AbstractComputerMoveStrategy implements ComputerMoveStrate
 
     protected abstract Sign getFindSign(Sign moveSign);
 
-    @SuppressWarnings("Convert2MethodRef")
     private void findBestCellForMoveByRows(final GameTable gameTable, final Sign findSign, final BestCells bestCells) {
-        for (int i = 0; i < COLS_AND_ROWS; i++) {
-            findBestCellForMoveUsingLambdaConversion(gameTable, findSign, bestCells, i, (k, j) -> new Cell(k, j));
-        }
+        findBestCellForMoveUsingLambdaConversion(gameTable, findSign, bestCells, Cell::new);
     }
 
     private void findBestCellForMoveByCols(final GameTable gameTable, final Sign findSign, final BestCells bestCells) {
-        for (int i = 0; i < COLS_AND_ROWS; i++) {
-            findBestCellForMoveUsingLambdaConversion(gameTable, findSign, bestCells, i, (k, j) -> new Cell(j, k));
-        }
+        findBestCellForMoveUsingLambdaConversion(gameTable, findSign, bestCells, (i, j) -> new Cell(j, i));
     }
 
-    private void findBestCellForMoveByMainDiagonal(final GameTable gameTable, final Sign findSign, final BestCells bestCells) {
-        findBestCellForMoveUsingLambdaConversion(gameTable, findSign, bestCells, -1, (k, j) -> new Cell(j, j));
+    private void findBestCellForMoveByMainDiagonal(final GameTable gameTable,
+                                                   final Sign findSign,
+                                                   final BestCells bestCells) {
+        // right
+        findBestCellForMoveByMainDiagonalUsingSecondaryLambdaConversion(gameTable, findSign, bestCells,
+                (i, j) -> new int[]{i, j});
+        // right
+        findBestCellForMoveByMainDiagonalUsingSecondaryLambdaConversion(gameTable, findSign, bestCells,
+                (i, j) -> new int[]{j, i});
     }
 
-    private void findBestCellForMoveBySecondaryDiagonal(final GameTable gameTable, final Sign findSign, final BestCells bestCells) {
-        findBestCellForMoveUsingLambdaConversion(gameTable, findSign, bestCells, -1, (k, j) -> new Cell(j, 14 - j));
+    private void findBestCellForMoveBySecondaryDiagonal(final GameTable gameTable,
+                                                        final Sign findSign,
+                                                        final BestCells bestCells) {
+        //right
+        findBestCellForMoveBySecondaryDiagonalUsingSecondaryLambdaConversion(gameTable, findSign, bestCells,
+                (temp, j) -> new int[]{temp, j});
+        //left
+        findBestCellForMoveBySecondaryDiagonalUsingSecondaryLambdaConversion(gameTable, findSign, bestCells,
+                (temp, j) -> new int[]{j, temp});
     }
 
-    private void findBestCellForMoveUsingLambdaConversion(GameTable gameTable,
-                                                          Sign findSign,
+    private void findBestCellForMoveUsingLambdaConversion(final GameTable gameTable,
+                                                          final Sign findSign,
                                                           final BestCells bestCells,
-                                                          final int i,
                                                           final Lambda lambda) {
-        int countEmptyCells = 0;
-        int countSignCells = 0;
-        final Cell[] localEmptyCells = new Cell[COLS_AND_ROWS];
-        int count = 0;
-        for (int j = 0; j < COLS_AND_ROWS; j++) {
-            final Cell cell = lambda.conversion(i, j);
-            if (gameTable.isEmpty(cell)) {
-                localEmptyCells[count++] = cell;
-                countEmptyCells++;
-            } else if (gameTable.getSign(cell) == findSign) {
-                countSignCells++;
-            } else {
-                break;
+        int countByDirection = 0;
+        for (int i = 0; i < lengthOfTable; i++) {
+            for (int j = 0; j < lengthOfTable; j++) {
+                if (gameTable.getSign(lambda.conversion(i, j)) == findSign) {
+                    countByDirection++;
+                } else {
+                    countByDirection = 0;
+                }
+                if (countByDirection == expectedSignCells) {
+                    Cell newCell = lambda.conversion(i, j + 1);
+                    if ((j + 1 < lengthOfTable) && gameTable.isEmpty(newCell)) {
+                        bestCells.add(newCell);
+                    }
+                    newCell = lambda.conversion(i, j - expectedSignCells);
+                    if ((j - expectedSignCells > -1) && gameTable.isEmpty(newCell)) {
+                        bestCells.add(newCell);
+                    }
+                }
             }
         }
-        if (countEmptyCells == expectedCountEmptyCells &&
-            countSignCells == COLS_AND_ROWS - expectedCountEmptyCells) {
-            for (int j = 0; j < count; j++) {
-                bestCells.add(localEmptyCells[j]);
+    }
+
+    private void findBestCellForMoveByMainDiagonalUsingSecondaryLambdaConversion(final GameTable gameTable,
+                                                                                 final Sign findSign,
+                                                                                 final BestCells bestCells,
+                                                                                 final SecondaryLambda lambda) {
+        int countByDirection = 0;
+        for (int i = 0; i < lengthOfTable - 4; i++) {
+            for (int j = 0; j < lengthOfTable; j++) {
+                int[] coordinates = lambda.conversion(j, j + i);
+                int x = coordinates[0];
+                int y = coordinates[1];
+                if (j + i >= lengthOfTable) {
+                    break;
+                }
+                if (gameTable.getSign(new Cell(x, y)) == findSign) {
+                    countByDirection++;
+                } else {
+                    countByDirection = 0;
+                }
+                if (countByDirection == expectedSignCells) {
+                    Cell newCell = new Cell(x - expectedSignCells, y - expectedSignCells);
+                    if ((y - expectedSignCells > -1) && (x - expectedSignCells > -1) &&
+                        gameTable.isEmpty(newCell)) {
+                        bestCells.add(newCell);
+                    }
+                    newCell = new Cell(x + 1, y + 1);
+                    if ((y + 1 < lengthOfTable) && (x + 1 < lengthOfTable) &&
+                        gameTable.isEmpty(newCell)) {
+                        bestCells.add(newCell);
+                    }
+                }
+            }
+        }
+    }
+
+    private void findBestCellForMoveBySecondaryDiagonalUsingSecondaryLambdaConversion(final GameTable gameTable,
+                                                                                      final Sign findSign,
+                                                                                      final BestCells bestCells,
+                                                                                      final SecondaryLambda lambda) {
+        int countByDirection = 0;
+        for (int i = 0; i < lengthOfTable - 4; i++) {
+            for (int j = 0; j < lengthOfTable; j++) {
+                int[] coordinates = lambda.conversion(j + i, j);
+                int x = coordinates[0];
+                int y = coordinates[1];
+                if (lengthOfTable - 1 - j - i < 0) {
+                    break;
+                }
+                if (gameTable.getSign(new Cell(x, lengthOfTable - 1 - y)) == findSign) {
+                    countByDirection++;
+                } else {
+                    countByDirection = 0;
+                }
+                if (countByDirection == expectedSignCells) {
+                    Cell newCell = new Cell(x - expectedSignCells, lengthOfTable - 1 - y + expectedSignCells);
+                    if ((x - expectedSignCells > -1) && (lengthOfTable - 1 - y + expectedSignCells < lengthOfTable) &&
+                        gameTable.isEmpty(newCell)) {
+                        bestCells.add(newCell);
+                    }
+                    newCell = new Cell(x + 1, lengthOfTable - y - 2);
+                    if ((x + 1 < lengthOfTable) && (lengthOfTable - y - 2 > -1) &&
+                        gameTable.isEmpty(newCell)) {
+                        bestCells.add(newCell);
+                    }
+                }
             }
         }
     }
 
     /**
      * @author Michael Balakhon
-     * @link http://t.me/mibal_ua
+     * @link t.me/mibal_ua
      */
     @FunctionalInterface
     private interface Lambda {
 
-        Cell conversion(int k, int j);
+        Cell conversion(int i, int j);
+    }
+
+    @FunctionalInterface
+    private interface SecondaryLambda {
+
+        int[] conversion(int i, int j);
     }
 
     /**
      * @author Michael Balakhon
-     * @link http://t.me/mibal_ua
+     * @link t.me/mibal_ua
      */
     private static class BestCells {
 
