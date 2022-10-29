@@ -49,5 +49,12 @@
             <fileMode>755</fileMode>
             <filtered>true</filtered>
         </fileSet>
+        <fileSet>
+            <directory/>
+            <outputDirectory/>
+            <includes>
+                <include>Readme.txt</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>
