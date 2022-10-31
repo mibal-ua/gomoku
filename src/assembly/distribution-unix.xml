@@ -50,7 +50,7 @@
             <filtered>true</filtered>
         </fileSet>
         <fileSet>
-            <directory/>
+            <directory>${project.basedir}/readmes/unix/</directory>
             <outputDirectory/>
             <includes>
                 <include>Readme.txt</include>
