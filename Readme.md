@@ -1,5 +1,4 @@
 # The Gomoku Project
-//TODO
 
 -----------------------------------------------------------------------------------
 
@@ -66,7 +65,7 @@ mvn -P with-jre clean package
 
 ### Important run info:
 
-#### You can use `start.sh` script with arguments (you can see list below):
+#### You can use `start.sh`(or `.cmd`) script with arguments (you can see list below):
 
 1. Open the terminal in folder with scripts.
 2. Enter command `./start.sh ${your-arguments}`.
@@ -76,10 +75,12 @@ mvn -P with-jre clean package
 
 #### Example of use:
 ```bash
-start.sh LEVEL1 7
+./start.sh LEVEL1 7
 ```
+
 - difficulty level became `1`;
 - a gametable with `7` rows and columns was created.
+> On Windows you must enter command without `./` in start
 
 -----------------------------------------------------------------------------------
 
