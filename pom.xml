@@ -21,7 +21,7 @@
 
     <groupId>ua.mibal</groupId>
     <artifactId>gomoku</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <url>https://t.me/mibal_ua</url>
     <organization>
